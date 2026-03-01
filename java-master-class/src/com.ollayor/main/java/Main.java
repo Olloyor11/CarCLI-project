@@ -43,6 +43,7 @@ public class Main {
             scan.nextLine();
 
             if (scanner == 1){
+                System.out.println();
                 System.out.println("Please enter your Id: ");
                 UUID idScanner = UUID.fromString(scan.nextLine());
                 User user = userService.getUserById(idScanner);
@@ -51,6 +52,7 @@ public class Main {
                     continue;
                 }
                 for (Car availableCar : carService.getAvailableCars()){
+                    System.out.println();
                     System.out.println("Here All available cars for now: " + availableCar);
                 }
                 System.out.println("Please enter the registration number of the car you wanted to rent: ");
