@@ -5,18 +5,24 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Car {
+    private UUID carId;
     private Brand brand;
     private String regNumber;
     private BigDecimal rentalPricePerDay;
     private boolean isElectric;
     private boolean isBooked;
 
-    public Car(Brand brand, String regNumber, BigDecimal rentalPricePerDay, boolean isElectric) {
+    public Car(UUID carId, Brand brand, String regNumber, BigDecimal rentalPricePerDay, boolean isElectric) {
+        this.carId = carId;
         this.brand = brand;
         this.regNumber = regNumber;
         this.rentalPricePerDay = rentalPricePerDay;
         this.isElectric = isElectric;
         this.isBooked = false;
+    }
+
+    public UUID getCarId(){
+        return carId;
     }
 
     public Brand getBrand() {
@@ -51,7 +57,8 @@ public class Car {
     @Override
     public String toString() {
         return "Car{" +
-                "brand=" + brand +
+                "carId=" + carId +
+                ", brand=" + brand +
                 ", regNumber='" + regNumber + '\'' +
                 ", rentalPricePerDay=" + rentalPricePerDay +
                 ", isElectric=" + isElectric +

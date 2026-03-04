@@ -1,29 +1,32 @@
 package com.ollayor.main.java.user;
 
+import java.io.File;
 import java.util.UUID;
 
 public class UserService {
-    private final UserDAO userDAO;
+    private final UserArrayDataAccessService userArrayDataAccessService;
 
-    public UserService(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserService(UserArrayDataAccessService userArrayDataAccessService) {
+        this.userArrayDataAccessService = userArrayDataAccessService;
     }
 
-    public User[] getAllUser(){
-        return userDAO.getUsers();
+    public User[] getAllUser() {
+        return userArrayDataAccessService.getUsers(new File("java-master-class/src/com.ollayor/main/java/users.csv"));
     }
 
-    public User getUserById(UUID id){
-        for (User user : getAllUser()){
-            if(user.getId().equals(id)){
+    public User getUserById(UUID userId) {
+        for (User user : getAllUser()) {
+            if (user.getUserId().equals(userId)) {
                 return user;
 
             }
 
         }
-        return null;
+        throw new IllegalStateException("No such User!");
     }
 
-
-
 }
+
+
+
+

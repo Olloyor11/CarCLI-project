@@ -1,35 +1,34 @@
 package com.ollayor.main.java;
 
 import com.ollayor.main.java.booking.CarBooking;
-import com.ollayor.main.java.booking.CarBookingDAO;
+import com.ollayor.main.java.booking.CarBookingDataAccessService;
 import com.ollayor.main.java.booking.CarBookingService;
 import com.ollayor.main.java.car.Car;
-import com.ollayor.main.java.car.CarDAO;
+import com.ollayor.main.java.car.CarArrayDataAccessService;
 import com.ollayor.main.java.car.CarService;
 import com.ollayor.main.java.user.User;
-import com.ollayor.main.java.user.UserDAO;
+import com.ollayor.main.java.user.UserArrayDataAccessService;
 import com.ollayor.main.java.user.UserService;
 
+import java.io.File;
+import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) {
 
-        UserDAO userDAO = new UserDAO();
-        CarDAO carDAO = new CarDAO();
-        CarBookingDAO carBookingDAO = new CarBookingDAO();
-        UserService userService = new UserService(userDAO);
-        CarService carService = new CarService(carDAO);
-        CarBookingService carBookingService = new CarBookingService(carBookingDAO);
+        UserArrayDataAccessService userArrayDataAccessService = new UserArrayDataAccessService();
+        CarArrayDataAccessService carArrayDataAccessService = new CarArrayDataAccessService();
+        CarBookingDataAccessService carBookingDataAccessService = new CarBookingDataAccessService();
+        UserService userService = new UserService(userArrayDataAccessService);
+        CarService carService = new CarService(carArrayDataAccessService);
+        CarBookingService carBookingService = new CarBookingService(carService, userService, carBookingDataAccessService);
 
         Scanner scan = new Scanner(System.in);
 
 
-
-
-
-        while (true){
+        while (true) {
             System.out.println("" +
                     "1 - Book Car\n" +
                     "2 - View All User Booked Cars\n" +
@@ -42,65 +41,78 @@ public class Main {
             int scanner = scan.nextInt();
             scan.nextLine();
 
-            if (scanner == 1){
+            if (scanner == 1) {
                 System.out.println();
                 System.out.println("Please enter your Id: ");
                 UUID idScanner = UUID.fromString(scan.nextLine());
-                User user = userService.getUserById(idScanner);
-                if (user == null){
+                User userId = userService.getUserById(idScanner);
+
+                if (userId == null) {
                     System.out.println("User not found");
                     continue;
                 }
-                for (Car availableCar : carService.getAvailableCars()){
+
+                System.out.println("Please enter starting date: ");
+                LocalDate startDate = LocalDate.parse(scan.nextLine());
+
+                System.out.println("Please enter Car returning date: ");
+                LocalDate endDate = LocalDate.parse(scan.nextLine());
+
+                System.out.println("Here All available cars for now: ");
+                for (Car availableCar : carService.getAvailableCars()) {
                     System.out.println();
-                    System.out.println("Here All available cars for now: " + availableCar);
+                    System.out.println(availableCar);
                 }
-                System.out.println("Please enter the registration number of the car you wanted to rent: ");
-                String regNumberScanner = scan.nextLine();
-                Car car = carService.getCarByRegNumber(regNumberScanner);
-                if (car == null){
+
+                System.out.println("Please enter Car Id: ");
+                UUID carIdScanner = UUID.fromString(scan.nextLine());
+                Car carId = carService.getCarById(carIdScanner);
+                if (carId == null) {
                     System.out.println("Car not found");
                     continue;
                 }
-                carBookingService.bookCar(user,car);
+                CarBooking booking = carBookingService.bookCar(userId.getUserId(), carId.getCarId(), startDate, endDate);
+
+                System.out.println("Your total price: " + booking.getTotalPrice());
+
+                System.out.println("Your booking is confirmed!");
+                System.out.println(booking.getBookedAt());
 
             }
-            if (scanner == 2){
+            if (scanner == 2) {
                 System.out.println("Please enter your ID: ");
 
                 UUID idScanner = UUID.fromString(scan.nextLine());
                 User user = userService.getUserById(idScanner);
 
-                if (user == null){
+                if (user == null) {
                     System.out.println("User not found");
                     continue;
                 }
 
-                carBookingService.getUserBooking(user);
-
-                for (CarBooking booking : carBookingService.getUserBooking(user)){
+                for (CarBooking booking : carBookingService.getUserBooking(user)) {
                     System.out.println(booking);
                 }
 
             }
-            if (scanner == 3){
+            if (scanner == 3) {
                 System.out.println("Here all bookings: ");
-                for (CarBooking booking : carBookingService.getAllBookings()){
+                for (CarBooking booking : carBookingService.getAllBookings()) {
                     System.out.println(booking);
                 }
             }
 
-            if (scanner == 4){
+            if (scanner == 4) {
                 System.out.println("Here are all available cars: ");
-                for (Car car : carService.getAvailableCars()){
+                for (Car car : carService.getAvailableCars()) {
                     System.out.println(car);
 
                 }
             }
 
-            if (scanner == 5){
+            if (scanner == 5) {
                 System.out.println("Here are all electric cars: ");
-                for (Car car : carService.getElectricCars()){
+                for (Car car : carService.getElectricCars()) {
                     System.out.println(car);
                 }
             }
@@ -112,15 +124,10 @@ public class Main {
                 }
             }
 
-            if (scanner == 7){
+            if (scanner == 7) {
                 break;
             }
 
-
-
-
         }
-
-
     }
 }

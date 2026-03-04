@@ -1,17 +1,16 @@
 package com.ollayor.main.java.car;
 
-import static com.ollayor.main.java.car.CarDAO.cars;
+import java.util.UUID;
 
 public class CarService {
-    private Car car;
-    private final CarDAO carDAO;
+    private final CarArrayDataAccessService carArrayDataAccessService;
 
-    public CarService(CarDAO carDAO) {
-        this.carDAO = carDAO;
+    public CarService(CarArrayDataAccessService carArrayDataAccessService) {
+        this.carArrayDataAccessService = carArrayDataAccessService;
     }
 
     public Car[] getAllCar() {
-        return carDAO.getCars();
+        return carArrayDataAccessService.getCars();
     }
 
     public Car[] getAvailableCars(){
@@ -20,6 +19,9 @@ public class CarService {
             if (!car.isBooked()){
                 count++;
             }
+        }
+        if (count == 0){
+            throw new IllegalStateException("There is not any car");
         }
         Car[] cars = new Car[count];
         int index = 0;
@@ -38,6 +40,9 @@ public class CarService {
             if (!car.isBooked() && car.isElectric()){
                 counts++;
             }
+        }
+        if (counts == 0){
+            throw new IllegalStateException("For now there is not any electric cars available");
         }
         Car[] electricCars = new Car[counts];
         int indexes = 0;
@@ -59,4 +64,15 @@ public class CarService {
         }
         return null;
     }
+
+    public Car getCarById(UUID id){
+        for (Car car : getAllCar()){
+            if (car.getCarId().equals(id)){
+                return car;
+            }
+        }
+        throw new IllegalStateException("No such Car found");
+    }
+
+
 }
