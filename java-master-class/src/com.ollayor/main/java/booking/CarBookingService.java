@@ -63,6 +63,9 @@ public class CarBookingService {
                     count++;
                 }
             }
+            if (count == 0){
+                throw new IllegalStateException("There is no active booking available!");
+            }
             CarBooking[] bookings = new CarBooking[count];
             int index = 0;
             for (CarBooking booking : carBookingDataAccessService.getBookings()) {
@@ -81,6 +84,11 @@ public class CarBookingService {
                     count++;
                 }
             }
+
+            if (count == 0){
+                throw new IllegalStateException("There is no active booking available!");
+            }
+
             CarBooking[] bookings = new CarBooking[count];
             int index = 0;
             for (CarBooking booking : getAllBookings()) {
