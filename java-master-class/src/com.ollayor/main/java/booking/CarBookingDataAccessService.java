@@ -2,10 +2,13 @@ package com.ollayor.main.java.booking;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CarBookingDataAccessService implements CarBookingDAO {
     private CarBooking[] bookings = new CarBooking[100];
     private int bookingCount;
+    List<String> booking = new ArrayList<String>();
 
 
     public void addBooking(CarBooking booking) {
@@ -21,6 +24,7 @@ public class CarBookingDataAccessService implements CarBookingDAO {
         bookingCount++;
 
     }
+
 
     @Override
     public CarBooking[] getBookings() {
