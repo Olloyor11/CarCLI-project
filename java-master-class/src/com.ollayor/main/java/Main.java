@@ -44,83 +44,120 @@ public class Main {
             if (scanner == 1) {
                 System.out.println();
                 System.out.println("Please enter your Id: ");
-                UUID idScanner = UUID.fromString(scan.nextLine());
-                User userId = userService.getUserById(idScanner);
 
-                if (userId == null) {
-                    System.out.println("User not found");
-                    continue;
+                try {
+
+
+                    UUID idScanner = UUID.fromString(scan.nextLine());
+                    User userId = userService.getUserById(idScanner);
+
+                    if (userId == null) {
+                        System.out.println("User not found");
+                        continue;
+                    }
+
+                    System.out.println("Please enter starting date: ");
+                    LocalDate startDate = LocalDate.parse(scan.nextLine());
+
+                    System.out.println("Please enter Car returning date: ");
+                    LocalDate endDate = LocalDate.parse(scan.nextLine());
+
+                    System.out.println("Here All available cars for now: ");
+                    for (Car availableCar : carService.getAvailableCars()) {
+                        System.out.println();
+                        System.out.println(availableCar);
+                    }
+
+                    System.out.println("Please enter Car Id: ");
+                    UUID carIdScanner = UUID.fromString(scan.nextLine());
+                    Car carId = carService.getCarById(carIdScanner);
+                    if (carId == null) {
+                        System.out.println("Car not found");
+                        continue;
+                    }
+                    CarBooking booking = carBookingService.bookCar(userId.getUserId(), carId.getCarId(), startDate, endDate);
+
+                    System.out.println("Your total price: " + booking.getTotalPrice());
+
+                    System.out.println("Your booking is confirmed!");
+                    System.out.println(booking.getBookedAt());
+
+                } catch (IllegalStateException e) {
+                    System.out.println(e.getMessage());
+
+                } catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
                 }
-
-                System.out.println("Please enter starting date: ");
-                LocalDate startDate = LocalDate.parse(scan.nextLine());
-
-                System.out.println("Please enter Car returning date: ");
-                LocalDate endDate = LocalDate.parse(scan.nextLine());
-
-                System.out.println("Here All available cars for now: ");
-                for (Car availableCar : carService.getAvailableCars()) {
-                    System.out.println();
-                    System.out.println(availableCar);
-                }
-
-                System.out.println("Please enter Car Id: ");
-                UUID carIdScanner = UUID.fromString(scan.nextLine());
-                Car carId = carService.getCarById(carIdScanner);
-                if (carId == null) {
-                    System.out.println("Car not found");
-                    continue;
-                }
-                CarBooking booking = carBookingService.bookCar(userId.getUserId(), carId.getCarId(), startDate, endDate);
-
-                System.out.println("Your total price: " + booking.getTotalPrice());
-
-                System.out.println("Your booking is confirmed!");
-                System.out.println(booking.getBookedAt());
-
             }
             if (scanner == 2) {
                 System.out.println("Please enter your ID: ");
 
-                UUID idScanner = UUID.fromString(scan.nextLine());
-                User user = userService.getUserById(idScanner);
+                try {
+                    UUID idScanner = UUID.fromString(scan.nextLine());
+                    User user = userService.getUserById(idScanner);
 
-                if (user == null) {
-                    System.out.println("User not found");
-                    continue;
-                }
+                    if (user == null) {
+                        System.out.println("User not found");
+                        continue;
+                    }
+                    for (CarBooking booking : carBookingService.getUserBooking(user)) {
+                        System.out.println(booking);
+                    }
+                } catch (IllegalStateException e) {
+                    System.out.println(e.getMessage());
 
-                for (CarBooking booking : carBookingService.getUserBooking(user)) {
-                    System.out.println(booking);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid UUID format");
                 }
 
             }
             if (scanner == 3) {
                 System.out.println("Here all bookings: ");
-                for (CarBooking booking : carBookingService.getAllBookings()) {
-                    System.out.println(booking);
+                try {
+                    for (CarBooking booking : carBookingService.getAllBookings()) {
+                        System.out.println(booking);
+                    }
+
+                } catch (IllegalStateException e) {
+                    System.out.println(e.getMessage());
                 }
             }
 
             if (scanner == 4) {
                 System.out.println("Here are all available cars: ");
-                for (Car car : carService.getAvailableCars()) {
-                    System.out.println(car);
 
+                try {
+                    for (Car car : carService.getAvailableCars()) {
+                        System.out.println(car);
+
+                    }
+
+                } catch (IllegalStateException e) {
+                    System.out.println(e.getMessage());
                 }
             }
 
             if (scanner == 5) {
                 System.out.println("Here are all electric cars: ");
-                for (Car car : carService.getElectricCars()) {
-                    System.out.println(car);
+                try {
+                    for (Car car : carService.getElectricCars()) {
+                        System.out.println(car);
+                    }
+
+                } catch (IllegalStateException e) {
+                    System.out.println(e.getMessage());
                 }
             }
 
             if (scanner == 6) {
                 System.out.println("Here are all users: ");
-                for (User users : userService.getAllUser()) {
-                    System.out.println(users);
+                try {
+                    for (User users : userService.getAllUser()) {
+                        System.out.println(users);
+                    }
+
+                } catch (IllegalStateException e) {
+                    System.out.println(e.getMessage());
                 }
             }
 

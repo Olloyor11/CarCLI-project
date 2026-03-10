@@ -1,6 +1,8 @@
 package com.ollayor.main.java.user;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class UserService {
@@ -10,7 +12,7 @@ public class UserService {
         this.userArrayDataAccessService = userArrayDataAccessService;
     }
 
-    public User[] getAllUser() {
+    public ArrayList<User> getAllUser() {
         return userArrayDataAccessService.getUsers(new File("java-master-class/src/com.ollayor/main/java/users.csv"));
     }
 

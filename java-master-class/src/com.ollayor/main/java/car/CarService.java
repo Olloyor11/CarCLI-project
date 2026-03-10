@@ -1,5 +1,7 @@
 package com.ollayor.main.java.car;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CarService {
@@ -9,51 +11,34 @@ public class CarService {
         this.carArrayDataAccessService = carArrayDataAccessService;
     }
 
-    public Car[] getAllCar() {
+    public ArrayList<Car> getAllCar() {
         return carArrayDataAccessService.getCars();
     }
 
-    public Car[] getAvailableCars(){
-        int count = 0;
+    public ArrayList<Car> getAvailableCars(){
+        ArrayList<Car> available = new ArrayList<>();
         for (Car car :getAllCar()){
             if (!car.isBooked()){
-                count++;
+              available.add(car);
             }
         }
-        if (count == 0){
+        if (available.isEmpty()){
             throw new IllegalStateException("There is not any car");
         }
-        Car[] cars = new Car[count];
-        int index = 0;
-        for (Car car : getAllCar()){
-            if (!car.isBooked()){
-                cars[index] = car;
-                index++;
 
-            }
-        }
-        return cars;
+        return available;
     }
-    public Car[] getElectricCars(){
-        int counts = 0;
+    public ArrayList<Car> getElectricCars(){
+        ArrayList<Car> electric = new ArrayList<>();
         for (Car car :getAllCar()){
             if (!car.isBooked() && car.isElectric()){
-                counts++;
+                electric.add(car);
             }
         }
-        if (counts == 0){
+        if (electric.isEmpty()){
             throw new IllegalStateException("For now there is not any electric cars available");
         }
-        Car[] electricCars = new Car[counts];
-        int indexes = 0;
-        for (Car car : getAllCar()){
-            if (!car.isBooked() && car.isElectric()){
-                electricCars[indexes] = car;
-                indexes++;
-
-            }
-        }
-        return electricCars;
+        return electric;
     }
 
     public Car getCarByRegNumber(String registrationNum){

@@ -9,6 +9,7 @@ import com.ollayor.main.java.user.UserService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import java.time.LocalDate;
@@ -56,51 +57,32 @@ public class CarBookingService {
 
         return booking;
     }
-        public CarBooking[] getAllBookings () {
-            int count = 0;
-            for (CarBooking booking : carBookingDataAccessService.getBookings()) {
-                if (booking != null) {
-                    count++;
-                }
+
+    public ArrayList<CarBooking> getAllBookings() {
+        ArrayList<CarBooking> booking = carBookingDataAccessService.getBookings();
+
+        if (booking.isEmpty()) {
+            throw new IllegalStateException("There is no active booking available!");
+        }
+        return booking;
+    }
+
+    public ArrayList<CarBooking> getUserBooking(User user) {
+        ArrayList<CarBooking> bookings = new ArrayList<>();
+        for (CarBooking booking : carBookingDataAccessService.getBookings()) {
+            if (booking.getUserDetails().getUserId().equals(user.getUserId())) {
+                bookings.add(booking);
             }
-            if (count == 0){
-                throw new IllegalStateException("There is no active booking available!");
-            }
-            CarBooking[] bookings = new CarBooking[count];
-            int index = 0;
-            for (CarBooking booking : carBookingDataAccessService.getBookings()) {
-                if (booking != null) {
-                    bookings[index] = booking;
-                    index++;
-                }
-            }
-            return bookings;
         }
 
-        public CarBooking[] getUserBooking (User user){
-            int count = 0;
-            for (CarBooking booking : carBookingDataAccessService.getBookings()) {
-                if (booking != null && booking.getUserDetails().getUserId().equals(user.getUserId())) {
-                    count++;
-                }
-            }
-
-            if (count == 0){
-                throw new IllegalStateException("There is no active booking available!");
-            }
-
-            CarBooking[] bookings = new CarBooking[count];
-            int index = 0;
-            for (CarBooking booking : getAllBookings()) {
-                if (booking != null && booking.getUserDetails().getUserId().equals(user.getUserId())) {
-                    bookings[index] = booking;
-                    index++;
-                }
-            }
-            return bookings;
-
+        if (bookings.isEmpty()) {
+            throw new IllegalStateException("There is no active booking available!");
         }
 
+        return bookings;
 
     }
+
+
+}
 
