@@ -2,7 +2,6 @@ package com.ollayor.main.java.user;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class UserService {
@@ -17,15 +16,16 @@ public class UserService {
     }
 
     public User getUserById(UUID userId) {
-        for (User user : getAllUser()) {
-            if (user.getUserId().equals(userId)) {
-                return user;
+        User userById = getAllUser()
+                .stream()
+                .filter(user -> user.getUserId().equals(userId))
+                .findFirst()
+                .orElseThrow(() ->
+                        new IllegalStateException("User not found"));
 
-            }
-
-        }
-        throw new IllegalStateException("No such User!");
+        return userById;
     }
+
 
 }
 

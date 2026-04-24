@@ -1,18 +1,16 @@
 package com.ollayor.main.java.booking;
 
+import com.ollayor.main.java.car.Car;
 import com.ollayor.main.java.car.CarService;
 import com.ollayor.main.java.user.User;
-import com.ollayor.main.java.car.Car;
-import com.ollayor.main.java.user.UserArrayDataAccessService;
 import com.ollayor.main.java.user.UserService;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.UUID;
-
-import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 public class CarBookingService {
 
@@ -58,6 +56,7 @@ public class CarBookingService {
         return booking;
     }
 
+
     public ArrayList<CarBooking> getAllBookings() {
         ArrayList<CarBooking> booking = carBookingDataAccessService.getBookings();
 
@@ -68,21 +67,20 @@ public class CarBookingService {
     }
 
     public ArrayList<CarBooking> getUserBooking(User user) {
-        ArrayList<CarBooking> bookings = new ArrayList<>();
-        for (CarBooking booking : carBookingDataAccessService.getBookings()) {
-            if (booking.getUserDetails().getUserId().equals(user.getUserId())) {
-                bookings.add(booking);
-            }
-        }
-
-        if (bookings.isEmpty()) {
+        ArrayList<CarBooking> bookings = carBookingDataAccessService
+                .getBookings()
+                .stream()
+                .filter(carBooking ->
+                        carBooking
+                                .getUserDetails()
+                                .getUserId()
+                                .equals(user.getUserId())).collect(Collectors.toCollection(ArrayList::new));
+        if (bookings.isEmpty()){
             throw new IllegalStateException("There is no active booking available!");
         }
-
         return bookings;
 
     }
-
 
 }
 

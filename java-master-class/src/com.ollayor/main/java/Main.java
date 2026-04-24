@@ -10,7 +10,6 @@ import com.ollayor.main.java.user.User;
 import com.ollayor.main.java.user.UserArrayDataAccessService;
 import com.ollayor.main.java.user.UserService;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.UUID;
