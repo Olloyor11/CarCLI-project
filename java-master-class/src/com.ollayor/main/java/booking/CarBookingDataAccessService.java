@@ -1,9 +1,10 @@
 package com.ollayor.main.java.booking;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CarBookingDataAccessService implements CarBookingDAO {
-    private ArrayList<CarBooking> bookings = new ArrayList<>();
+    private List<CarBooking> bookings = new ArrayList<>();
 
 
     public void addBooking(CarBooking booking) {
@@ -12,7 +13,7 @@ public class CarBookingDataAccessService implements CarBookingDAO {
 
 
     @Override
-    public ArrayList<CarBooking> getBookings() {
+    public List<CarBooking> getBookings() {
         return bookings;
 
     }

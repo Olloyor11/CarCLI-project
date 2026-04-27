@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -57,8 +58,8 @@ public class CarBookingService {
     }
 
 
-    public ArrayList<CarBooking> getAllBookings() {
-        ArrayList<CarBooking> booking = carBookingDataAccessService.getBookings();
+    public List<CarBooking> getAllBookings() {
+        List<CarBooking> booking = carBookingDataAccessService.getBookings();
 
         if (booking.isEmpty()) {
             throw new IllegalStateException("There is no active booking available!");
@@ -66,8 +67,8 @@ public class CarBookingService {
         return booking;
     }
 
-    public ArrayList<CarBooking> getUserBooking(User user) {
-        ArrayList<CarBooking> bookings = carBookingDataAccessService
+    public List<CarBooking> getUserBooking(User user) {
+        List<CarBooking> bookings = carBookingDataAccessService
                 .getBookings()
                 .stream()
                 .filter(carBooking ->

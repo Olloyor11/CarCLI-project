@@ -14,12 +14,12 @@ public class CarService {
         this.carArrayDataAccessService = carArrayDataAccessService;
     }
 
-    public ArrayList<Car> getAllCar() {
+    public List<Car> getAllCar() {
         return carArrayDataAccessService.getCars();
     }
 
-    public ArrayList<Car> getAvailableCars(){
-        ArrayList<Car> available = getAllCar()
+    public List<Car> getAvailableCars(){
+        List<Car> available = getAllCar()
                 .stream()
                 .filter(car -> !car.isBooked() )
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -30,7 +30,7 @@ public class CarService {
     }
 
     public List<Car> getElectricCars(){
-        ArrayList<Car> electric = getAllCar()
+        List<Car> electric = getAllCar()
                 .stream()
                 .filter(car -> car.isElectric() && !car.isBooked())
                 .collect(Collectors.toCollection(ArrayList::new));

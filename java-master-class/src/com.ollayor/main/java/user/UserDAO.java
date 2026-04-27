@@ -1,8 +1,8 @@
 package com.ollayor.main.java.user;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 
 public interface UserDAO {
-    ArrayList<User> getUsers(File file);
+    List<User> getUsers(File file);
 }

@@ -1,7 +1,8 @@
 package com.ollayor.main.java.car;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface CarDAO {
-    ArrayList<Car> getCars();
+    List<Car> getCars();
 }

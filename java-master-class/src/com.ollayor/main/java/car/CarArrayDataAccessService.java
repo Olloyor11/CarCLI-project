@@ -3,10 +3,11 @@ package com.ollayor.main.java.car;
 import java.math.BigDecimal;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CarArrayDataAccessService implements CarDAO {
-    static final ArrayList<Car> cars = new ArrayList<>();
+    static final List<Car> cars = new ArrayList<>();
 
 
     static {
