@@ -23,7 +23,7 @@ public class CarArrayDataAccessService implements CarDAO {
     }
 
     @Override
-    public ArrayList<Car> getCars() {
+    public List<Car> getCars() {
         return new ArrayList<>(cars);
     }
 }

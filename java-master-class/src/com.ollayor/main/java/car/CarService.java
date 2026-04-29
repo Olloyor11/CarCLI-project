@@ -8,14 +8,14 @@ import java.util.stream.Collectors;
 
 
 public class CarService {
-    private final CarArrayDataAccessService carArrayDataAccessService;
+    private final CarDAO carDAO;
 
-    public CarService(CarArrayDataAccessService carArrayDataAccessService) {
-        this.carArrayDataAccessService = carArrayDataAccessService;
+    public CarService(CarDAO carDAO) {
+        this.carDAO = carDAO;
     }
 
     public List<Car> getAllCar() {
-        return carArrayDataAccessService.getCars();
+        return carDAO.getCars();
     }
 
     public List<Car> getAvailableCars(){

@@ -48,12 +48,7 @@ public class Main {
 
 
                     UUID idScanner = UUID.fromString(scan.nextLine());
-                    User userId = userService.getUserById(idScanner);
-
-                    if (userId == null) {
-                        System.out.println("User not found");
-                        continue;
-                    }
+                    User user = userService.getUserById(idScanner);
 
                     System.out.println("Please enter starting date: ");
                     LocalDate startDate = LocalDate.parse(scan.nextLine());
@@ -69,12 +64,9 @@ public class Main {
 
                     System.out.println("Please enter Car Id: ");
                     UUID carIdScanner = UUID.fromString(scan.nextLine());
-                    Car carId = carService.getCarById(carIdScanner);
-                    if (carId == null) {
-                        System.out.println("Car not found");
-                        continue;
-                    }
-                    CarBooking booking = carBookingService.bookCar(userId.getUserId(), carId.getCarId(), startDate, endDate);
+                    Car car = carService.getCarById(carIdScanner);
+
+                    CarBooking booking = carBookingService.bookCar(user.getUserId(), car.getCarId(), startDate, endDate);
 
                     System.out.println("Your total price: " + booking.getTotalPrice());
 
@@ -84,8 +76,6 @@ public class Main {
                 } catch (IllegalStateException e) {
                     System.out.println(e.getMessage());
 
-                } catch (IllegalArgumentException e) {
-                    System.out.println(e.getMessage());
                 }
             }
             if (scanner == 2) {
@@ -99,7 +89,7 @@ public class Main {
                         System.out.println("User not found");
                         continue;
                     }
-                    for (CarBooking booking : carBookingService.getUserBooking(user)) {
+                    for (CarBooking booking : carBookingService.getUserBooking(idScanner)) {
                         System.out.println(booking);
                     }
                 } catch (IllegalStateException e) {

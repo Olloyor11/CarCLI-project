@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.UUID;
 
 public class UserService {
-    private final UserArrayDataAccessService userArrayDataAccessService;
+    private final UserDAO userDAO;
 
-    public UserService(UserArrayDataAccessService userArrayDataAccessService) {
-        this.userArrayDataAccessService = userArrayDataAccessService;
+    public UserService(UserDAO userDAO) {
+        this.userDAO = userDAO;
     }
 
     public List<User> getAllUser() {
-        return userArrayDataAccessService.getUsers(new File("java-master-class/src/com.ollayor/main/java/users.csv"));
+        return userDAO.getUsers(new File("java-master-class/src/com.ollayor/main/java/users.csv"));
     }
 
     public User getUserById(UUID userId) {

@@ -17,13 +17,13 @@ public class CarBookingService {
 
     private final CarService carService;
     private final UserService userService;
-    private final CarBookingDataAccessService carBookingDataAccessService;
+    private final CarBookingDAO carBookingDAO;
 
 
-    public CarBookingService(CarService carService, UserService userService, CarBookingDataAccessService carBookingDataAccessService) {
+    public CarBookingService(CarService carService, UserService userService, CarBookingDAO carBookingDAO) {
         this.carService = carService;
         this.userService = userService;
-        this.carBookingDataAccessService = carBookingDataAccessService;
+        this.carBookingDAO = carBookingDAO;
     }
 
     public CarBooking bookCar(UUID userId, UUID carId, LocalDate startDate, LocalDate
@@ -52,14 +52,14 @@ public class CarBookingService {
 
         car.setBooked(true);
 
-        carBookingDataAccessService.addBooking(booking);
+        carBookingDAO.addBooking(booking);
 
         return booking;
     }
 
 
     public List<CarBooking> getAllBookings() {
-        List<CarBooking> booking = carBookingDataAccessService.getBookings();
+        List<CarBooking> booking = carBookingDAO.getBookings();
 
         if (booking.isEmpty()) {
             throw new IllegalStateException("There is no active booking available!");
@@ -67,17 +67,17 @@ public class CarBookingService {
         return booking;
     }
 
-    public List<CarBooking> getUserBooking(User user) {
-        List<CarBooking> bookings = carBookingDataAccessService
+    public List<CarBooking> getUserBooking(UUID id) {
+        List<CarBooking> bookings = carBookingDAO
                 .getBookings()
                 .stream()
                 .filter(carBooking ->
                         carBooking
                                 .getUserDetails()
                                 .getUserId()
-                                .equals(user.getUserId())).collect(Collectors.toCollection(ArrayList::new));
+                                .equals(id)).collect(Collectors.toCollection(ArrayList::new));
         if (bookings.isEmpty()){
-            throw new IllegalStateException("There is no active booking available!");
+            throw new IllegalStateException("No bookings found for this user.");
         }
         return bookings;
 
