@@ -1,35 +1,33 @@
 package com.ollayor.main.java;
 
 import com.ollayor.main.java.booking.CarBooking;
-import com.ollayor.main.java.booking.CarBookingDAO;
+import com.ollayor.main.java.booking.CarBookingDataAccessService;
 import com.ollayor.main.java.booking.CarBookingService;
 import com.ollayor.main.java.car.Car;
-import com.ollayor.main.java.car.CarDAO;
+import com.ollayor.main.java.car.CarArrayDataAccessService;
 import com.ollayor.main.java.car.CarService;
 import com.ollayor.main.java.user.User;
-import com.ollayor.main.java.user.UserDAO;
+import com.ollayor.main.java.user.UserArrayDataAccessService;
 import com.ollayor.main.java.user.UserService;
 
+import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) {
 
-        UserDAO userDAO = new UserDAO();
-        CarDAO carDAO = new CarDAO();
-        CarBookingDAO carBookingDAO = new CarBookingDAO();
-        UserService userService = new UserService(userDAO);
-        CarService carService = new CarService(carDAO);
-        CarBookingService carBookingService = new CarBookingService(carBookingDAO);
+        UserArrayDataAccessService userArrayDataAccessService = new UserArrayDataAccessService();
+        CarArrayDataAccessService carArrayDataAccessService = new CarArrayDataAccessService();
+        CarBookingDataAccessService carBookingDataAccessService = new CarBookingDataAccessService();
+        UserService userService = new UserService(userArrayDataAccessService);
+        CarService carService = new CarService(carArrayDataAccessService);
+        CarBookingService carBookingService = new CarBookingService(carService, userService, carBookingDataAccessService);
 
-        Scanner scan = new Scanner(System.in);
-
-
+        Scanner scanner = new Scanner(System.in);
 
 
-
-        while (true){
+        while (true) {
             System.out.println("" +
                     "1 - Book Car\n" +
                     "2 - View All User Booked Cars\n" +
@@ -39,86 +37,123 @@ public class Main {
                     "6 - View All Users\n" +
                     "7 - Exit");
 
-            int scanner = scan.nextInt();
-            scan.nextLine();
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-            if (scanner == 1){
+            if (choice == 1) {
+                System.out.println();
                 System.out.println("Please enter your Id: ");
-                UUID idScanner = UUID.fromString(scan.nextLine());
-                User user = userService.getUserById(idScanner);
-                if (user == null){
-                    System.out.println("User not found");
-                    continue;
-                }
-                for (Car availableCar : carService.getAvailableCars()){
-                    System.out.println("Here All available cars for now: " + availableCar);
-                }
-                System.out.println("Please enter the registration number of the car you wanted to rent: ");
-                String regNumberScanner = scan.nextLine();
-                Car car = carService.getCarByRegNumber(regNumberScanner);
-                if (car == null){
-                    System.out.println("Car not found");
-                    continue;
-                }
-                carBookingService.bookCar(user,car);
 
+                try {
+
+
+                    UUID idScanner = UUID.fromString(scanner.nextLine());
+                    User user = userService.getUserById(idScanner);
+
+                    System.out.println("Please enter starting date: ");
+                    LocalDate startDate = LocalDate.parse(scanner.nextLine());
+
+                    System.out.println("Please enter Car returning date: ");
+                    LocalDate endDate = LocalDate.parse(scanner.nextLine());
+
+                    System.out.println("Here All available cars for now: ");
+                    for (Car availableCar : carService.getAvailableCars()) {
+                        System.out.println();
+                        System.out.println(availableCar);
+                    }
+
+                    System.out.println("Please enter Car Id: ");
+                    UUID carIdScanner = UUID.fromString(scanner.nextLine());
+                    Car car = carService.getCarById(carIdScanner);
+
+                    CarBooking booking = carBookingService.bookCar(user.getUserId(), car.getCarId(), startDate, endDate);
+
+                    System.out.println("Your total price: " + booking.getTotalPrice());
+
+                    System.out.println("Your booking is confirmed!");
+                    System.out.println(booking.getBookedAt());
+
+                } catch (IllegalStateException e) {
+                    System.out.println(e.getMessage());
+
+                }
             }
-            if (scanner == 2){
+            if (choice == 2) {
                 System.out.println("Please enter your ID: ");
 
-                UUID idScanner = UUID.fromString(scan.nextLine());
-                User user = userService.getUserById(idScanner);
+                try {
+                    UUID idScanner = UUID.fromString(scanner.nextLine());
+                    User user = userService.getUserById(idScanner);
 
-                if (user == null){
-                    System.out.println("User not found");
-                    continue;
-                }
+                    if (user == null) {
+                        System.out.println("User not found");
+                        continue;
+                    }
+                    for (CarBooking booking : carBookingService.getUserBooking(idScanner)) {
+                        System.out.println(booking);
+                    }
+                } catch (IllegalStateException e) {
+                    System.out.println(e.getMessage());
 
-                carBookingService.getUserBooking(user);
-
-                for (CarBooking booking : carBookingService.getUserBooking(user)){
-                    System.out.println(booking);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid UUID format");
                 }
 
             }
-            if (scanner == 3){
+            if (choice == 3) {
                 System.out.println("Here all bookings: ");
-                for (CarBooking booking : carBookingService.getAllBookings()){
-                    System.out.println(booking);
+                try {
+                    for (CarBooking booking : carBookingService.getAllBookings()) {
+                        System.out.println(booking);
+                    }
+
+                } catch (IllegalStateException e) {
+                    System.out.println(e.getMessage());
                 }
             }
 
-            if (scanner == 4){
+            if (choice == 4) {
                 System.out.println("Here are all available cars: ");
-                for (Car car : carService.getAvailableCars()){
-                    System.out.println(car);
 
+                try {
+                    for (Car car : carService.getAvailableCars()) {
+                        System.out.println(car);
+
+                    }
+
+                } catch (IllegalStateException e) {
+                    System.out.println(e.getMessage());
                 }
             }
 
-            if (scanner == 5){
+            if (choice == 5) {
                 System.out.println("Here are all electric cars: ");
-                for (Car car : carService.getElectricCars()){
-                    System.out.println(car);
+                try {
+                    for (Car car : carService.getElectricCars()) {
+                        System.out.println(car);
+                    }
+
+                } catch (IllegalStateException e) {
+                    System.out.println(e.getMessage());
                 }
             }
 
-            if (scanner == 6) {
+            if (choice == 6) {
                 System.out.println("Here are all users: ");
-                for (User users : userService.getAllUser()) {
-                    System.out.println(users);
+                try {
+                    for (User users : userService.getAllUser()) {
+                        System.out.println(users);
+                    }
+
+                } catch (IllegalStateException e) {
+                    System.out.println(e.getMessage());
                 }
             }
 
-            if (scanner == 7){
+            if (choice == 7) {
                 break;
             }
 
-
-
-
         }
-
-
     }
 }

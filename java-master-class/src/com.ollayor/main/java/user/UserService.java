@@ -1,5 +1,8 @@
 package com.ollayor.main.java.user;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class UserService {
@@ -9,21 +12,24 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public User[] getAllUser(){
-        return userDAO.getUsers();
+    public List<User> getAllUser() {
+        return userDAO.getUsers(new File("java-master-class/src/com.ollayor/main/java/users.csv"));
     }
 
-    public User getUserById(UUID id){
-        for (User user : getAllUser()){
-            if(user.getId().equals(id)){
-                return user;
+    public User getUserById(UUID userId) {
+        User userById = getAllUser()
+                .stream()
+                .filter(user -> user.getUserId().equals(userId))
+                .findFirst()
+                .orElseThrow(() ->
+                        new IllegalStateException("User not found"));
 
-            }
-
-        }
-        return null;
+        return userById;
     }
-
 
 
 }
+
+
+
+

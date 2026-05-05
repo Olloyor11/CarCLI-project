@@ -1,27 +1,11 @@
 package com.ollayor.main.java.booking;
 
-public class CarBookingDAO {
-    private CarBooking[] bookings = new CarBooking[100];
-    private int bookingCount;
+import java.util.List;
 
+public interface CarBookingDAO {
+    List<CarBooking> getBookings();
 
-    public void addBooking(CarBooking booking){
-        if (bookingCount == bookings.length){
-            CarBooking[] temp = new CarBooking[bookings.length * 2];
-            for (int i = 0; i < bookings.length; i++) {
-                temp[i] = bookings[i];
+    void addBooking(CarBooking booking);
 
-            }
-            bookings = temp;
-        }
-        bookings[bookingCount] = booking;
-        bookingCount++;
-
-    }
-
-    public CarBooking[] getBookings(){
-        return bookings;
-
-    }
 
 }

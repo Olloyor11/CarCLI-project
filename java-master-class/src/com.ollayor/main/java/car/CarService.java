@@ -1,62 +1,65 @@
 package com.ollayor.main.java.car;
 
-import static com.ollayor.main.java.car.CarDAO.cars;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 
 public class CarService {
-    private Car car;
     private final CarDAO carDAO;
 
     public CarService(CarDAO carDAO) {
         this.carDAO = carDAO;
     }
 
-    public Car[] getAllCar() {
+    public List<Car> getAllCar() {
         return carDAO.getCars();
     }
 
-    public Car[] getAvailableCars(){
-        int count = 0;
-        for (Car car :getAllCar()){
-            if (!car.isBooked()){
-                count++;
-            }
+    public List<Car> getAvailableCars(){
+        List<Car> available = getAllCar()
+                .stream()
+                .filter(car -> !car.isBooked() )
+                .collect(Collectors.toCollection(ArrayList::new));
+        if (available.isEmpty()){
+            throw new IllegalStateException("There is not any car");
         }
-        Car[] cars = new Car[count];
-        int index = 0;
-        for (Car car : getAllCar()){
-            if (!car.isBooked()){
-                cars[index] = car;
-                index++;
-
-            }
-        }
-        return cars;
+        return available;
     }
-    public Car[] getElectricCars(){
-        int counts = 0;
-        for (Car car :getAllCar()){
-            if (!car.isBooked() && car.isElectric()){
-                counts++;
-            }
-        }
-        Car[] electricCars = new Car[counts];
-        int indexes = 0;
-        for (Car car : getAllCar()){
-            if (!car.isBooked() && car.isElectric()){
-                electricCars[indexes] = car;
-                indexes++;
 
-            }
+    public List<Car> getElectricCars(){
+        List<Car> electric = getAllCar()
+                .stream()
+                .filter(car -> car.isElectric() && !car.isBooked())
+                .collect(Collectors.toCollection(ArrayList::new));
+        if (electric.isEmpty()){
+            throw new IllegalStateException("For now there is not any electric cars available");
         }
-        return electricCars;
+        return electric;
     }
 
     public Car getCarByRegNumber(String registrationNum){
-        for (Car car : getAllCar()){
-            if (car.getRegNumber().equalsIgnoreCase(registrationNum)){
-                return car;
-            }
-        }
-        return null;
+        Car carByReg = getAllCar()
+                .stream()
+                .filter(car -> car.getRegNumber()
+                        .equalsIgnoreCase(registrationNum))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Car not found!"));
+        return carByReg;
     }
+
+    public Car getCarById(UUID id){
+        Car carById = getAllCar()
+                .stream()
+                .filter(car -> car
+                        .getCarId()
+                        .equals(id))
+                .findFirst().orElseThrow(() ->
+                        new IllegalStateException("Not found"));
+        return carById;
+    }
+
+
 }
