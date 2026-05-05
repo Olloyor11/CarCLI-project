@@ -24,7 +24,7 @@ public class Main {
         CarService carService = new CarService(carArrayDataAccessService);
         CarBookingService carBookingService = new CarBookingService(carService, userService, carBookingDataAccessService);
 
-        Scanner scan = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
 
 
         while (true) {
@@ -37,24 +37,24 @@ public class Main {
                     "6 - View All Users\n" +
                     "7 - Exit");
 
-            int scanner = scan.nextInt();
-            scan.nextLine();
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-            if (scanner == 1) {
+            if (choice == 1) {
                 System.out.println();
                 System.out.println("Please enter your Id: ");
 
                 try {
 
 
-                    UUID idScanner = UUID.fromString(scan.nextLine());
+                    UUID idScanner = UUID.fromString(scanner.nextLine());
                     User user = userService.getUserById(idScanner);
 
                     System.out.println("Please enter starting date: ");
-                    LocalDate startDate = LocalDate.parse(scan.nextLine());
+                    LocalDate startDate = LocalDate.parse(scanner.nextLine());
 
                     System.out.println("Please enter Car returning date: ");
-                    LocalDate endDate = LocalDate.parse(scan.nextLine());
+                    LocalDate endDate = LocalDate.parse(scanner.nextLine());
 
                     System.out.println("Here All available cars for now: ");
                     for (Car availableCar : carService.getAvailableCars()) {
@@ -63,7 +63,7 @@ public class Main {
                     }
 
                     System.out.println("Please enter Car Id: ");
-                    UUID carIdScanner = UUID.fromString(scan.nextLine());
+                    UUID carIdScanner = UUID.fromString(scanner.nextLine());
                     Car car = carService.getCarById(carIdScanner);
 
                     CarBooking booking = carBookingService.bookCar(user.getUserId(), car.getCarId(), startDate, endDate);
@@ -78,11 +78,11 @@ public class Main {
 
                 }
             }
-            if (scanner == 2) {
+            if (choice == 2) {
                 System.out.println("Please enter your ID: ");
 
                 try {
-                    UUID idScanner = UUID.fromString(scan.nextLine());
+                    UUID idScanner = UUID.fromString(scanner.nextLine());
                     User user = userService.getUserById(idScanner);
 
                     if (user == null) {
@@ -100,7 +100,7 @@ public class Main {
                 }
 
             }
-            if (scanner == 3) {
+            if (choice == 3) {
                 System.out.println("Here all bookings: ");
                 try {
                     for (CarBooking booking : carBookingService.getAllBookings()) {
@@ -112,7 +112,7 @@ public class Main {
                 }
             }
 
-            if (scanner == 4) {
+            if (choice == 4) {
                 System.out.println("Here are all available cars: ");
 
                 try {
@@ -126,7 +126,7 @@ public class Main {
                 }
             }
 
-            if (scanner == 5) {
+            if (choice == 5) {
                 System.out.println("Here are all electric cars: ");
                 try {
                     for (Car car : carService.getElectricCars()) {
@@ -138,7 +138,7 @@ public class Main {
                 }
             }
 
-            if (scanner == 6) {
+            if (choice == 6) {
                 System.out.println("Here are all users: ");
                 try {
                     for (User users : userService.getAllUser()) {
@@ -150,7 +150,7 @@ public class Main {
                 }
             }
 
-            if (scanner == 7) {
+            if (choice == 7) {
                 break;
             }
 
